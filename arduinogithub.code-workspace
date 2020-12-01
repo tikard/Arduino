@@ -5,10 +5,6 @@
 			"path": "Temp_Humid_LCD"
 		},
 		{
-			"name": "Scanner_I2C",
-			"path": "Scanner_I2C"
-		},
-		{
 			"path": "esp8266-dht11dht22-temperature"
 		},
 		{
@@ -16,6 +12,10 @@
 		},
 		{
 			"path": "i2c_scanner"
+		},
+		{
+			"name": "Scanner_I2C",
+			"path": "Scanner_I2C"
 		}
 	],
 	"settings": {}
