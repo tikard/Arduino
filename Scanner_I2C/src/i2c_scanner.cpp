@@ -3,7 +3,7 @@
 // I2C Scanner
 // Written by Nick Gammon
 // Date: 20th April 2011
- 
+// See if this comment gets thru to PC
 #include <Wire.h>
  
 void setup() {
