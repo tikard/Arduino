@@ -22,7 +22,7 @@
  * WIFI Settings
  **************************/
 const char* WIFI_SSID = "Firehole2-2G";
-const char* WIFI_PWD = "cad123dis";
+const char* WIFI_PWD = "";
 
 /***************************
  * Begin DHT11 Settings
@@ -80,8 +80,9 @@ const int SDC_PIN = GPIO2
 // https://docs.thingpulse.com/how-tos/openweathermap-key/
 const boolean IS_METRIC = false;
 // Add your own thingpulse ID 
-String OPEN_WEATHER_MAP_APP_ID = "9ca06b4086ac0d662c5ba7603e382f90";
+String OPEN_WEATHER_MAP_APP_ID = "";
 String OPEN_WEATHER_MAP_LOCATION = "Rexburg,US";
+// 9ca06b4086ac0d662c5ba7603e382f90
 
 // Pick a language code from this list:
 // Arabic - ar, Bulgarian - bg, Catalan - ca, Czech - cz, German - de, Greek - el,

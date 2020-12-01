@@ -15,7 +15,7 @@
 // Replace with your network credentials
 const char* ssid = "Firehole2-2G";
 //const char* ssid = "firehole";
-const char* password = "cad123dis";
+const char* password = "";
 
 #define DHTPIN 5     // Digital pin connected to the DHT sensor
 
