@@ -13,9 +13,6 @@
 			"path": "Scanner_I2C"
 		},
 		{
-			"path": "Simple"
-		},
-		{
 			"path": "Temp_Humid_LCD"
 		},
 		{
