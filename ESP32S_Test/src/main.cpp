@@ -10,7 +10,7 @@
 #include <WiFi.h>
 
 const char* ssid     = "Firehole2-2G";
-const char* password = "cad123dis";
+const char* password = "";
 
 const char* host = "data.sparkfun.com";
 const char* streamId   = "....................";
