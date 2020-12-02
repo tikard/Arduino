@@ -16,6 +16,9 @@
 		{
 			"name": "Scanner_I2C",
 			"path": "Scanner_I2C"
+		},
+		{
+			"path": "ESP32S_Test"
 		}
 	],
 	"settings": {}
