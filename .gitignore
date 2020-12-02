@@ -1,2 +1,4 @@
 /Test.txt
 /ArduinoCode.code-workspace
+*.code-workspace
+
