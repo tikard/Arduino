@@ -17,6 +17,10 @@
 		},
 		{
 			"path": "WeatherStationDemo"
+		},
+		{
+			"name": "201201-213158-arduino-wifiscan",
+			"path": "..\\..\\201201-213158-arduino-wifiscan"
 		}
 	]
 }
