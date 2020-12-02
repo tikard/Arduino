@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "Temp_Humid_LCD",
+			"path": "Temp_Humid_LCD"
+		},
+		{
+			"path": "esp8266-dht11dht22-temperature"
+		},
+		{
+			"path": "WeatherStationDemo"
+		},
+		{
+			"path": "i2c_scanner"
+		},
+		{
+			"name": "Scanner_I2C",
+			"path": "Scanner_I2C"
+		},
+		{
+			"path": "ESP32S_Test"
+		}
+	],
+	"settings": {}
+}
