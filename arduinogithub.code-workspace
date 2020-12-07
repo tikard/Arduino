@@ -21,6 +21,12 @@
 		{
 			"name": "201201-213158-arduino-wifiscan",
 			"path": "..\\..\\201201-213158-arduino-wifiscan"
+		},
+		{
+			"path": "RadioHead_nrf24_reliable_datagram_client"
+		},
+		{
+			"path": "RadioHead_nrf24_reliable_datagram_server"
 		}
 	]
 }

@@ -7,6 +7,10 @@
 // Tested on Teensy with Sparkfun WRL-00691 NRF24L01 module
 // Tested on Anarduino Mini (http://www.anarduino.com/mini/) with RFM73 module
 // Tested on Arduino Mega with Sparkfun WRL-00691 NRF25L01 module
+//
+// Got Working with 5V adaptor boards BUT NOTE:
+//               MISO and MIS1 are reversed on these durn things
+//
 
 #include <RHReliableDatagram.h>
 #include <RH_NRF24.h>

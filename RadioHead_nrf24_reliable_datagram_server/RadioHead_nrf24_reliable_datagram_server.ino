@@ -15,6 +15,10 @@
 #define CLIENT_ADDRESS 1
 #define SERVER_ADDRESS 2
 
+bool initPassed = false;
+
+//#define RH_HAVE_SERIAL
+
 // Singleton instance of the radio driver
 RH_NRF24 driver(9,10);
 // RH_NRF24 driver(8, 7);   // For RFM73 on Anarduino Mini
@@ -22,35 +26,73 @@ RH_NRF24 driver(9,10);
 // Class to manage message delivery and receipt, using the driver declared above
 RHReliableDatagram manager(driver, SERVER_ADDRESS);
 
+void configRadio(){
+
+  //DataRate1Mbps = 0,   ///< 1 Mbps
+  //DataRate2Mbps,       ///< 2 Mbps
+  //DataRate250kbps      ///< 250 kbps
+
+  // Add 20dBm for nRF24L01p with PA and LNA modules
+  //TransmitPowerm18dBm = 0,        ///< On nRF24, -18 dBm
+  //TransmitPowerm12dBm,            ///< On nRF24, -12 dBm
+  //TransmitPowerm6dBm,             ///< On nRF24, -6 dBm
+  //TransmitPower0dBm,              ///< On nRF24, 0 dBm
+
+  driver.setChannel(2); // The default, in case it was set by another app without powering down
+  driver.setRF(RH_NRF24::DataRate2Mbps, RH_NRF24::TransmitPower0dBm);
+  //driver.printRegisters();
+
+  delay(1000);
+}
+
 void setup() 
 {
   Serial.begin(9600);
-  if (!manager.init())
-    Serial.println("init failed");
+  initPassed = manager.init();
+  
+  if (initPassed){
   // Defaults after init are 2.402 GHz (channel 2), 2Mbps, 0dBm
+    configRadio();
+  }
+  else{
+    Serial.println("Init failed in setup");
+  }
 }
 
-uint8_t data[] = "And hello back to you";
+uint8_t data[] = "   hello back to you";
 // Dont put this on the stack:
 uint8_t buf[RH_NRF24_MAX_MESSAGE_LEN];
+uint8_t cnt = 49;
 
 void loop()
 {
-  if (manager.available())
-  {
-    // Wait for a message addressed to us from the client
-    uint8_t len = sizeof(buf);
-    uint8_t from;
-    if (manager.recvfromAck(buf, &len, &from))
+  if(initPassed){
+    if (manager.available())
     {
-      Serial.print("got request from : 0x");
-      Serial.print(from, HEX);
-      Serial.print(": ");
-      Serial.println((char*)buf);
+      // Wait for a message addressed to us from the client
+      uint8_t len = sizeof(buf);
+      uint8_t from;
+      if (manager.recvfromAck(buf, &len, &from))
+      {
+        Serial.print("got request from : 0x");
+        Serial.print(from, HEX);
+        Serial.print(": ");
+        Serial.println((char*)buf);
+  
+        // Send a reply back to the originator client
+        if (!manager.sendtoWait(data, sizeof(data), from))
+          Serial.println("sendtoWait failed");
 
-      // Send a reply back to the originator client
-      if (!manager.sendtoWait(data, sizeof(data), from))
-        Serial.println("sendtoWait failed");
+                 // add # in on reply
+        if(cnt++ > 56) 
+          cnt = 49;
+        data[0] = cnt;
+        Serial.println((char*)data);
+ 
+      }
     }
+  }else{  
+    Serial.println("Init Failed -- Check Radio and reset conroller");
+    delay(5000);    
   }
 }
