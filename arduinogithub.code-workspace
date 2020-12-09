@@ -27,6 +27,9 @@
 		},
 		{
 			"path": "RadioHead_nrf24_reliable_datagram_server"
+		},
+		{
+			"path": "RH_NRF24_Client"
 		}
 	]
 }
