@@ -30,6 +30,9 @@
 		},
 		{
 			"path": "RH_NRF24_Client"
+		},
+		{
+			"path": "RH_NRF24_Server"
 		}
 	]
 }
