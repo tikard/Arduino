@@ -18,6 +18,15 @@
 #include <RH_NRF24.h>
 #include <SPI.h>
 
+#if !defined(nullptr)
+#define nullptr NULL
+#endif
+
+#include "FTDebouncer.h"
+
+FTDebouncer pinDebouncer(60);
+
+
 #define goodLED 7
 #define badLED 6
 
@@ -25,6 +34,7 @@
 #define SERVER_ADDRESS 2
 
 bool initPassed = false;
+bool sendMSG = false;
 
 //#define RH_HAVE_SERIAL
 
@@ -53,7 +63,7 @@ void configRadio(){
   delay(2000);
 }
 
-void blinkLed(int led, int onTime=100, int blinkCnt = 1, int offTime = 100){
+void blinkLed(int led, int onTime=100, int offTime = 100, int blinkCnt = 1 ){
   for (int i = 0; i < blinkCnt; i++){
     digitalWrite(led, HIGH);
     delay(onTime);
@@ -64,10 +74,16 @@ void blinkLed(int led, int onTime=100, int blinkCnt = 1, int offTime = 100){
 
 void setup() 
 {
+  pinDebouncer.addPin(4, LOW);
+  
+  pinDebouncer.begin();
+  Serial.println(sizeof(pinDebouncer));
+  Serial.println(pinDebouncer.getPinCount());
+ 
   pinMode(goodLED,OUTPUT);  // Flash LED on good
   pinMode(badLED,OUTPUT);  // Flash LED on good
   
-  Serial.begin(9600);
+  Serial.begin(115200);
   initPassed = manager.init();
   
   if (initPassed){
@@ -85,38 +101,68 @@ uint8_t buf[RH_NRF24_MAX_MESSAGE_LEN];
 
 void loop()
 {
-  if(initPassed){
-    Serial.println("Sending to nrf24_reliable_datagram_server");
+  pinDebouncer.update();
+  
+  if(sendMSG){
+    if(initPassed){
+      Serial.println("Sending to nrf24_reliable_datagram_server");
+        
+      // Send a message to manager_server
+      if (manager.sendtoWait(data, sizeof(data), SERVER_ADDRESS))
+      {
+        // Now wait for a reply from the server
+        uint8_t len = sizeof(buf);
+        uint8_t from;   
+        if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+        {
+          Serial.print("got reply from : 0x");
+          Serial.print(from, HEX);
+          Serial.print(": ");
+          Serial.println((char*)buf);
+          blinkLed(goodLED,5,5);
+          //sendMSG = false;
+        }
+        else
+        {
+          Serial.println("No reply, is nrf24_reliable_datagram_server running?");
+        }
+      }
+      else{
+        Serial.println("sendtoWait failed");
+        blinkLed(badLED);
+      }
       
-    // Send a message to manager_server
-    if (manager.sendtoWait(data, sizeof(data), SERVER_ADDRESS))
-    {
-      // Now wait for a reply from the server
-      uint8_t len = sizeof(buf);
-      uint8_t from;   
-      if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
-      {
-        Serial.print("got reply from : 0x");
-        Serial.print(from, HEX);
-        Serial.print(": ");
-        Serial.println((char*)buf);
-        blinkLed(goodLED);
-      }
-      else
-      {
-        Serial.println("No reply, is nrf24_reliable_datagram_server running?");
-      }
+      delay(2);
     }
     else{
-      Serial.println("sendtoWait failed");
-      blinkLed(badLED);
+      Serial.println("Init Failed -- Check Radio and reset conroller");
+      blinkLed(badLED,50, 50, 20);
+      delay(5000);
     }
-    
-    delay(500);
   }
-  else{
-    Serial.println("Init Failed -- Check Radio and reset conroller");
-    blinkLed(badLED,50, 20, 50);
-    delay(5000);
+  
+}
+
+void onPinActivated(int pinNr){
+  //Serial.print("Pin activated: ");
+  //Serial.println(pinNr);
+  switch(pinNr){
+    case 4:
+      if(sendMSG == false){
+        sendMSG = true;
+        Serial.println("START Sending msgs");
+      }
+      else{
+        sendMSG = false;
+        Serial.println("STOP  Sending msgs");
+      }
+      break;
+    default:
+        break;
   }
+}
+
+void onPinDeactivated(int pinNr){
+  //Serial.print("Pin deactivated: ");
+  //Serial.println(pinNr);
 }
